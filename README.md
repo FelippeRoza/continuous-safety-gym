@@ -24,7 +24,7 @@ pip install -e .
 ```
 import gymnasium as gym
 import bullet_safety_gym
-env = gym.make('SafetyCarGather-v0')
+env = gym.make('ContSafetyCarReach-v0')
 ```
 
 
