@@ -23,7 +23,7 @@ pip install -e .
 
 ```
 import gymnasium as gym
-import bullet_safety_gym
+import continuousSafetyGym
 env = gym.make('ContSafetyCarReach-v0')
 ```
 
