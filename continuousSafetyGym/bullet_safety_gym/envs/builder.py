@@ -91,13 +91,15 @@ class EnvironmentBuilder(gym.Env):
             obstacles: dict,
             world: dict,
             graphics=False,
-            debug=False
+            debug=False,
+            render_mode = 'human'
     ):
         self.input_parameters = locals()  # save setting for later reset
         self.use_graphics = graphics
         self.debug = debug
         self.world_name = world['name']
         self.global_scaling = world.get('factor', 1.0)
+        self.render_mode = render_mode
 
         # Physics parameters depend on the task
         time_step, frame_skip, num_solver_iter = get_physics_parameters(task)
@@ -353,10 +355,7 @@ class EnvironmentBuilder(gym.Env):
         truncated = False  # TODO: change
         return next_obs, r, terminated, truncated, info
 
-    def render(
-            self,
-            mode='human'
-    ) -> np.ndarray:
+    def render(self) -> np.ndarray:
         """Show PyBullet GUI visualization.
 
         Render function triggers the PyBullet GUI visualization.
@@ -373,7 +372,7 @@ class EnvironmentBuilder(gym.Env):
         array
             holding RBG image of environment if mode == 'rgb_array'
         """
-        if mode == 'human':
+        if self.render_mode == 'human':
             # close direct connection to physics server and
             # create new instance of physics with GUI visuals
             if not self.use_graphics:
@@ -381,7 +380,7 @@ class EnvironmentBuilder(gym.Env):
                 self.use_graphics = True
                 self.bc = self._setup_client_and_physics(graphics=True)
                 self._setup_simulation()
-        if mode != "rgb_array":
+        if self.render_mode != "rgb_array":
             return np.array([])
         else:
             view_matrix = self.bc.computeViewMatrixFromYawPitchRoll(
