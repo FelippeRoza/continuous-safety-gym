@@ -62,7 +62,7 @@ class ReachGoalTask(bases.Task):
             # Drone should not leave valid operation space...
             cost_out_of_range=(1. if z > 2 else 0.)
         )
-        distance_list = [ob.distance_until_contact(self.agent)
+        distance_list = [- ob.distance_until_contact(self.agent)
                           for ob in self.obstacles]
         # sum all costs in one total cost
         # cs['cost'] = min(1, sum(v for k, v in cs.items() if k.startswith('cost_')))
