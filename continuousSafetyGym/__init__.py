@@ -28,7 +28,7 @@ register(
     entry_point='continuousSafetyGym.bullet_safety_gym.envs.builder:EnvironmentBuilder',
     max_episode_steps=500,
     kwargs=dict(
-        agent='RaceCar',
+        agent='Ball',
         task='ReachGoalTask',
         obstacles={'Pillar': {'number': 8, 'fixed_base': True,
                               'movement': 'static'}
