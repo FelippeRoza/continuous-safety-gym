@@ -27,7 +27,7 @@ class Ball(bases.Agent):
             collision_radius=0.5,  # ball has 0.5 diameter
             self_collision=False,
             velocity_constraint=2.5,
-            max_force=3.5,
+            max_force=8.0,
             max_velocity=0,  # irrelevant parameter (external force controlled)
             debug=debug
         )
