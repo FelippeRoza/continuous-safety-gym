@@ -24,7 +24,7 @@ register(
 
 # ===== Bullet Safety Gym =====
 register(
-    id='ContSafetyCarReach-v0',
+    id='ContSafetyBallReach-v0',
     entry_point='continuousSafetyGym.bullet_safety_gym.envs.builder:EnvironmentBuilder',
     max_episode_steps=500,
     kwargs=dict(
