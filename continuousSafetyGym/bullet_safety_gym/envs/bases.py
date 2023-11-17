@@ -852,8 +852,8 @@ class Obstacle(Body):
 
     def apply_movement(self):
         if self.movement == 'circular':
-            r = 0.7
-            vel_factor = 1
+            r = 1.3
+            vel_factor = 0.3
             t = self.movement_offset
             circle_vec = np.array([np.sin(vel_factor * (time.time() + t)),
                                    np.cos(vel_factor * (time.time() + t)), 0])
