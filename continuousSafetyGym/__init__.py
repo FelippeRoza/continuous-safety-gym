@@ -37,3 +37,20 @@ register(
         # debug=True
     ),
 )
+
+
+register(
+    id='ContSafetyBallReach-v1',
+    entry_point='continuousSafetyGym.bullet_safety_gym.envs.builder:EnvironmentBuilder',
+    max_episode_steps=500,
+    kwargs=dict(
+        agent='Ball',
+        task='ReachGoalTask',
+        obstacles={'Box': {'number': 3, 'fixed_base': False,
+                           'movement': 'circular'},
+                   'Pillar': {'number': 5, 'fixed_base': True,
+                              'movement': 'static'}
+                   },
+        world={'name': 'SmallRoom'},
+    ),
+)
