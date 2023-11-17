@@ -60,6 +60,11 @@ class Box(bases.Obstacle):
         collision = True if collision_list != () else False
 
         return collision
+    
+    def distance_until_contact(self, agent: bases.Agent):
+        xy_dist = np.linalg.norm(agent.get_position()[:2]
+                                 - self.get_position()[:2])
+        return xy_dist - agent.collision_radius - self.global_scaling / 2
 
 
 class CircleZone(bases.Obstacle):
