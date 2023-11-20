@@ -323,6 +323,7 @@ class EnvironmentBuilder(gym.Env):
         info (dict)
             contains auxiliary diagnostic information such as the cost signal
         """
+        collision = False
         action = np.squeeze(action)
         self.iteration += 1
         self.agent.apply_action(action)
@@ -341,6 +342,7 @@ class EnvironmentBuilder(gym.Env):
         # update agent visuals when costs are received
         if (np.array(info.get('cost', 0)) > 0).any():
             self.agent.violates_constraints(True)
+            collision = True
         else:
             self.agent.violates_constraints(False)
         done = not self.agent.alive
@@ -351,9 +353,9 @@ class EnvironmentBuilder(gym.Env):
             else:
                 done = True
         next_obs = self.get_observation()
-        terminated = done
+
         truncated = False  # TODO: change
-        return next_obs, r, terminated, truncated, info
+        return next_obs, r - collision*2, collision or done, truncated, info
 
     def render(self) -> np.ndarray:
         """Show PyBullet GUI visualization.
