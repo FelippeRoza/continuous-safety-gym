@@ -299,6 +299,9 @@ class EnvironmentBuilder(gym.Env):
         world = getattr(worlds, name)
         return world(self.bc, global_scaling=factor)
 
+    def calculate_cost(self):
+        return self.task.calculate_cost()
+
     def step(
             self,
             action: np.ndarray
