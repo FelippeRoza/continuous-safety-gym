@@ -358,7 +358,7 @@ class EnvironmentBuilder(gym.Env):
         next_obs = self.get_observation()
 
         truncated = False  # TODO: change
-        return next_obs, r - collision*2, collision or done, truncated, info
+        return next_obs, r - collision*2, done, truncated, info
 
     def render(self) -> np.ndarray:
         """Show PyBullet GUI visualization.
