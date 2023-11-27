@@ -300,7 +300,7 @@ class EnvironmentBuilder(gym.Env):
         return world(self.bc, global_scaling=factor)
 
     def calculate_cost(self):
-        return self.task.calculate_cost()
+        return self.task.calculate_cost()['cost']
 
     def step(
             self,
