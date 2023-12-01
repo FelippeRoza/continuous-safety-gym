@@ -11,7 +11,7 @@ class MultiAgentEnv(gym.Env):
         'render_modes': ["human", "rgb_array"],
     }
 
-    def __init__(self, world, reset_callback=None, reward_callback=None,
+    def __init__(self, world, render_mode, reset_callback=None, reward_callback=None,
                  observation_callback=None, info_callback=None,
                  done_callback=None, constraint_callback=None, shared_viewer=True):
 
@@ -26,6 +26,7 @@ class MultiAgentEnv(gym.Env):
         self.info_callback = info_callback
         self.done_callback = done_callback
         self.constraint_callback = constraint_callback
+        self.render_mode = render_mode
 
         # environment parameters
         self.discrete_action_space = False
@@ -105,6 +106,12 @@ class MultiAgentEnv(gym.Env):
         self.sub_constraint_space = self.constraint_space
         self.constraint_space = spaces.Box(low=low, high=high, shape=constraint_shape, dtype=np.float64)
 
+    def calculate_cost(self):
+        constraints = []
+        for agent in self.agents:
+            constraints.append(self._get_constraints(agent))
+        
+        return list(np.concatenate(constraints))
 
     def step(self, action):
         obs_n = []
@@ -244,8 +251,8 @@ class MultiAgentEnv(gym.Env):
         self.render_geoms_xform = None
 
     # render environment
-    def render(self, mode='human'):
-        if mode == 'human':
+    def render(self):
+        if self.render_mode == 'human':
             alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
             message = ''
             for agent in self.world.agents:
@@ -264,7 +271,7 @@ class MultiAgentEnv(gym.Env):
             if self.viewers[i] is None:
                 # import rendering only if we need it (and don't import for headless machines)
                 #from gym.envs.classic_control import rendering
-                from multiagent import rendering
+                from . import rendering
                 self.viewers[i] = rendering.Viewer(700,700)
 
         # create rendering geometry
