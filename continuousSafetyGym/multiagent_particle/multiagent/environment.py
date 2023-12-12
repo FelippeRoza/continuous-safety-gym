@@ -37,6 +37,7 @@ class MultiAgentEnv(gym.Env):
         # if true, every agent has the same reward
         self.shared_reward = world.collaborative if hasattr(world, 'collaborative') else False
         self.time = 0
+        self.collision = False
 
         # configure spaces
         self.action_space = []
@@ -113,6 +114,14 @@ class MultiAgentEnv(gym.Env):
         
         return list(np.concatenate(constraints))
 
+    
+    def is_collision(self):
+        for i in range(len(self.world.agents)):
+            for j in range(i + 1, len(self.world.agents), 1):
+                if self.scenario.is_collision(self.world.agents[i], self.world.agents[j]):
+                    return True
+        return False
+    
     def step(self, action):
         obs_n = []
         reward_n = []
@@ -140,12 +149,13 @@ class MultiAgentEnv(gym.Env):
             if self.constraint_callback is not None:
                 constraint_n.append(self._get_constraints(agent))
 
-
         obs_n = np.concatenate(obs_n)
         truncated = False  #TODO: change this
         info = {'cost': np.concatenate(constraint_n), 'reward': reward_n}
         reward = np.sum(reward_n)
-        return obs_n, reward, all(done_n), truncated, info
+        self.collision = self.is_collision()
+
+        return obs_n, reward, all(done_n) or self.collision, truncated, info
 
     def reset(self, *, seed: Optional[int] = None, options={}):
         super().reset(seed=seed)

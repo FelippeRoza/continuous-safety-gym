@@ -100,6 +100,7 @@ class EnvironmentBuilder(gym.Env):
         self.world_name = world['name']
         self.global_scaling = world.get('factor', 1.0)
         self.render_mode = render_mode
+        self.collision = False
 
         # Physics parameters depend on the task
         time_step, frame_skip, num_solver_iter = get_physics_parameters(task)
@@ -301,6 +302,10 @@ class EnvironmentBuilder(gym.Env):
 
     def calculate_cost(self):
         return self.task.calculate_cost()['cost']
+    
+    def is_collision(self):
+        info = self.task.calculate_cost()
+        return self.task.get_collisions() > 0 or (np.array(info.get('cost', 0)) > 0).any()
 
     def step(
             self,
@@ -326,7 +331,6 @@ class EnvironmentBuilder(gym.Env):
         info (dict)
             contains auxiliary diagnostic information such as the cost signal
         """
-        collision = False
         action = np.squeeze(action)
         self.iteration += 1
         self.agent.apply_action(action)
@@ -343,12 +347,13 @@ class EnvironmentBuilder(gym.Env):
         r = self.task.calculate_reward()
         info = self.task.calculate_cost()
         # update agent visuals when costs are received
-        if (np.array(info.get('cost', 0)) > 0).any():
-            self.agent.violates_constraints(True)
-            collision = True
+        if self.is_collision():
+            # self.agent.violates_constraints(True)
+            self.collision = True
         else:
-            self.agent.violates_constraints(False)
-        done = not self.agent.alive
+            self.collision = False
+            # self.agent.violates_constraints(False)
+        done = not self.agent.alive or self.collision
         if self.task.goal_achieved:
             if self.task.continue_after_goal_achievement:
                 r += 5.0  # add sparse reward
@@ -358,7 +363,7 @@ class EnvironmentBuilder(gym.Env):
         next_obs = self.get_observation()
 
         truncated = False  # TODO: change
-        return next_obs, r - collision*2, done, truncated, info
+        return next_obs, r - self.collision*5, done, truncated, info
 
     def render(self) -> np.ndarray:
         """Show PyBullet GUI visualization.

@@ -24,10 +24,3 @@ class DecentralizedSafe(MultiAgentEnv):
             constraint_callback = scenario.constraints,
             shared_viewer = True
             )
-    
-    def is_collision(self):
-        for i in range(len(self.world.agents)):
-            for j in range(i + 1, len(self.world.agents), 1):
-                if self.scenario.is_collision(self.world.agents[i], self.world.agents[j]):
-                    return True
-        return False
