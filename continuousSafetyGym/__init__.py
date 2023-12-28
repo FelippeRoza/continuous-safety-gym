@@ -6,6 +6,9 @@ from gymnasium.envs.registration import register
 register(
     id='MultiagentDescentralizedSafe-v0',
     entry_point='continuousSafetyGym.multiagent_particle.decentralized_safe:DecentralizedSafe',
+    kwargs=dict(
+        safe_init=True,
+    ),
     # FIXME(cathywu) currently has to be exactly max_path_length parameters in
     # rllab run script
     max_episode_steps=300,
