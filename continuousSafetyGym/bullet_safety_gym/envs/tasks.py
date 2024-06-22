@@ -590,12 +590,28 @@ class GatherTask(bases.Task):
         c = self.get_collisions() * self.bomb_cost
         z = self.agent.get_position()[2]  # Limit range of Drone agent
 
+        # # sum all costs in one total cost
+        # info['cost_gathered_bombs'] = c
+        # info['cost_out_of_range'] = 1. if z > 2 else 0.
+        # # limit cost to be at most 1.0
+        # info['cost'] = min(1, sum(v for k, v in info.items()
+        #                           if k.startswith('cost_')))
+        
+        distance_list = []
+        for o in self.obstacles:
+            if not isinstance(o, Bomb):
+                continue  # only consider bombs
+            distance = o.get_position()[:2] - self.agent.get_position()[:2]
+            distance = np.linalg.norm(distance)
+            distance_list.append(- (distance - self.detection_distance))
         # sum all costs in one total cost
-        info['cost_gathered_bombs'] = c
-        info['cost_out_of_range'] = 1. if z > 2 else 0.
-        # limit cost to be at most 1.0
-        info['cost'] = min(1, sum(v for k, v in info.items()
-                                  if k.startswith('cost_')))
+        # cs['cost'] = min(1, sum(v for k, v in cs.items() if k.startswith('cost_')))
+        
+        info['cost'] = distance_list
+        info['cost'] = [max(distance_list)]
+        info['cost_max'] = max(distance_list)
+
+
         return info
 
     def calculate_reward(self):

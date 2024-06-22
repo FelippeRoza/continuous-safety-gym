@@ -57,3 +57,21 @@ register(
         world={'name': 'SmallRoom'},
     ),
 )
+
+
+register(
+    id='ContSafetyBallGather-v0',
+    entry_point='continuousSafetyGym.bullet_safety_gym.envs.builder:EnvironmentBuilder',
+    max_episode_steps=500,
+    kwargs=dict(
+        agent='Ball',
+        task='GatherTask',
+        obstacles={'Apple': {'number': 8, 'fixed_base': True,
+                           'movement': 'static'},
+                   'Bomb': {'number': 8, 'fixed_base': True,
+                              'movement': 'static'}
+                   },
+        world={'name': 'SmallRoom', 'factor': 1},
+        # debug=True
+    ),
+)
