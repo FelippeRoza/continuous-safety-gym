@@ -101,6 +101,7 @@ class EnvironmentBuilder(gym.Env):
         self.global_scaling = world.get('factor', 1.0)
         self.render_mode = render_mode
         self.collision = False
+        self.total_collisions = 0
 
         # Physics parameters depend on the task
         time_step, frame_skip, num_solver_iter = get_physics_parameters(task)
@@ -247,7 +248,8 @@ class EnvironmentBuilder(gym.Env):
         """
         agent_obs = self.agent.get_observation()
         task_obs = self.task.get_observation()
-        obs = np.concatenate([agent_obs, task_obs])
+        cost = self.calculate_cost()
+        obs = np.concatenate([agent_obs, task_obs, cost])
         return obs
 
     def get_task(
@@ -354,6 +356,7 @@ class EnvironmentBuilder(gym.Env):
             self.collision = False
             # self.agent.violates_constraints(False)
         done = not self.agent.alive or self.collision
+        self.total_collisions += self.collision
         if self.task.goal_achieved:
             if self.task.continue_after_goal_achievement:
                 r += 5.0  # add sparse reward
