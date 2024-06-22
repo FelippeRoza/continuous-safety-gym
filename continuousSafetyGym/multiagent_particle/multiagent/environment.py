@@ -38,6 +38,7 @@ class MultiAgentEnv(gym.Env):
         self.shared_reward = world.collaborative if hasattr(world, 'collaborative') else False
         self.time = 0
         self.collision = False
+        self.total_collisions = 0
 
         # configure spaces
         self.action_space = []
@@ -154,6 +155,7 @@ class MultiAgentEnv(gym.Env):
         info = {'cost': np.concatenate(constraint_n), 'reward': reward_n}
         reward = np.sum(reward_n)
         self.collision = self.is_collision()
+        self.total_collisions += self.collision
 
         return obs_n, reward, all(done_n) or self.collision, truncated, info
 
