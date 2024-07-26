@@ -1,5 +1,5 @@
 from gymnasium.envs.registration import register
-
+import continuousSafetyGym.safety_gymnasium
 # Multiagent envs
 # ----------------------------------------
 
@@ -55,6 +55,22 @@ register(
                               'movement': 'static'}
                    },
         world={'name': 'SmallRoom'},
+    ),
+)
+
+# ===== Car =====
+register(
+    id='ContSafetyCarReach-v0',
+    entry_point='continuousSafetyGym.bullet_safety_gym.envs.builder:EnvironmentBuilder',
+    max_episode_steps=500,
+    kwargs=dict(
+        agent='RaceCar',
+        task='ReachGoalTask',
+        obstacles={'Pillar': {'number': 8, 'fixed_base': True,
+                              'movement': 'static'}
+                   },
+        world={'name': 'SmallRoom'},
+        # debug=True
     ),
 )
 
