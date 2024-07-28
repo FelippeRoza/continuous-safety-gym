@@ -227,6 +227,7 @@ class Builder(gymnasium.Env, gymnasium.utils.EzPickle):
             # keep track of constraint violations
             if cost > 0:  
                 self.total_collisions += 1
+                self.terminated = True
 
             self.task.specific_step()
 
