@@ -350,12 +350,12 @@ class EnvironmentBuilder(gym.Env):
         info = self.task.calculate_cost()
         # update agent visuals when costs are received
         if self.is_collision():
-            # self.agent.violates_constraints(True)
+            self.agent.violates_constraints(True)
             self.collision = True
         else:
             self.collision = False
-            # self.agent.violates_constraints(False)
-        done = not self.agent.alive or self.collision
+            self.agent.violates_constraints(False)
+        done = not self.agent.alive
         self.total_collisions += self.collision
         if self.task.goal_achieved:
             if self.task.continue_after_goal_achievement:
