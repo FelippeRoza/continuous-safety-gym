@@ -33,7 +33,7 @@ register(
     kwargs=dict(
         agent='Ball',
         task='ReachGoalTask',
-        obstacles={'Pillar': {'number': 8, 'fixed_base': True,
+        obstacles={'Box': {'number': 8, 'fixed_base': True,
                               'movement': 'static'}
                    },
         world={'name': 'SmallRoom'},
