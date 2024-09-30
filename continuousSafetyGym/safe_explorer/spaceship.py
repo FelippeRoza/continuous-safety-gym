@@ -135,6 +135,15 @@ class Spaceship(gym.Env):
 
         return np.concatenate([min_constraints, max_constraint])
 
+    def get_observation(self):
+        observation = {
+            "agent_position": self._agent_position,
+            "agent_velocity": self._velocity,
+            "target_position": self._get_noisy_target_position()
+        }
+        flat_observation = flatten(self.dict_observation_space, observation)
+        return flat_observation
+
     def step(self, action):
         # Increment time
         self._update_time()
@@ -146,12 +155,7 @@ class Spaceship(gym.Env):
         reward = self._get_reward()
         
         # Prepare return payload
-        observation = {
-            "agent_position": self._agent_position,
-            "agent_velocity": self._velocity,
-            "target_position": self._get_noisy_target_position()
-        }
-        flat_observation = flatten(self.dict_observation_space, observation)
+        obs = self.get_observation()
 
         self.collision = self._is_agent_outside_boundary()
         self.total_collisions += self.collision
@@ -159,4 +163,4 @@ class Spaceship(gym.Env):
         terminated = self._is_agent_outside_boundary()
         truncated = int(self._current_time // 1) >= self._episode_length
         
-        return flat_observation, reward, terminated, truncated, self.get_info()
+        return obs, reward, terminated, truncated, self.get_info()
