@@ -8,5 +8,5 @@ setup(name='continuousSafetyGym',
       packages=find_packages(),
       include_package_data=True,
       zip_safe=False,
-      install_requires=['gymnasium>=0.26.3', 'numpy==1.24.4','PyYAML==6.0.1', 'pybullet>=3.0.6']
+      install_requires=['gymnasium>=0.26.3', 'numpy==1.23.5','PyYAML==6.0.1', 'pybullet>=3.0.6', 'imageio[ffmpeg]>=2.30.0', 'mujoco==2.3.3', 'xmltodict>=0.13.0']
 )

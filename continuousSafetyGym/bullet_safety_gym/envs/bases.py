@@ -630,7 +630,7 @@ class Agent(Body):
         self.violation_shape = self.bc.createVisualShape(
             self.bc.GEOM_SPHERE,
             radius=self.size_violation_shape,
-            rgbaColor=[1, 0, 0, 0.001],  # alpha = 0 renders shadows
+            rgbaColor=[1, 0, 0, 0.0],  # alpha = 0 renders shadows
             specularColor=[0, 0, 0],
         )
         self.violation_body_id = self.bc.createMultiBody(
