@@ -123,8 +123,13 @@ class MultiAgentEnv(gym.Env):
                     return True
         return False
     
-    def step(self, action):
+    def get_observation(self):
         obs_n = []
+        for agent in self.agents:
+            obs_n.append(self._get_obs(agent))
+        return np.concatenate(obs_n)
+
+    def step(self, action):
         reward_n = []
         done_n = []
         info_n = {'n': []}
@@ -141,7 +146,6 @@ class MultiAgentEnv(gym.Env):
         self.world.step()
         # record observation for each agent
         for agent in self.agents:
-            obs_n.append(self._get_obs(agent))
             reward_n.append(self._get_reward(agent))   # add action as an argument?
             done_n.append(self._get_done(agent))
 
@@ -150,7 +154,8 @@ class MultiAgentEnv(gym.Env):
             if self.constraint_callback is not None:
                 constraint_n.append(self._get_constraints(agent))
 
-        obs_n = np.concatenate(obs_n)
+        obs_n = self.get_observation()
+
         truncated = False  #TODO: change this
         info = {'cost': np.concatenate(constraint_n), 'reward': reward_n}
         reward = np.sum(reward_n)
